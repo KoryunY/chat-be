@@ -1,0 +1,38 @@
+[
+  {
+    "id": "5cbb1432-1182-4fb0-824e-5f98f3572925",
+    "password": "qwertyuio",
+    "login": "qwertyui",
+    "name": "qwertyui"
+  },
+  {
+    "id": "5c09615d-a899-4504-a579-8ba41b12770a",
+    "password": "Abc123456+-",
+    "login": "erik.babajanyan",
+    "name": "Erik"
+  },
+  {
+    "id": "924dfcde-d449-4782-b5e3-cb461234687c",
+    "password": "dfghjkdfgh",
+    "login": "dfghjkdfgh",
+    "name": "dfghjkdfgh"
+  },
+  {
+    "id": "9f8c8862-bc88-460a-99dc-986a60aecc78",
+    "password": "qwertyu",
+    "login": "qwertyu",
+    "name": "qwertyu"
+  },
+  {
+    "id": "0e7a1ea1-2c0d-4574-ac08-29396b28a995",
+    "password": "whbvwbqb",
+    "login": "whbvwbqb",
+    "name": "shavbhabsv"
+  },
+  {
+    "id": "9b808041-5b0b-4408-a867-47617fe627a9",
+    "password": "asdfghjkl",
+    "login": "asdfghjkl",
+    "name": "qwertyuio"
+  }
+]

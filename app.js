@@ -22,36 +22,36 @@ mongoose.connect(process.env.DB, { useUnifiedTopology: true, useNewUrlParser: tr
 
 const connection = mongoose.connection;
 
-connection.once("open", function() {
-  console.log("MongoDB database connection established successfully");
-  
-//   connection.createCollection("Messages", {
-//     validator: {
-//       $jsonSchema: {
-//         bsonType: "object",
-//         required: ["senderId", "receiverId", "message", "timeStamp"],
-//         properties: {
-//           senderId: {
-//             bsonType: "string",
-//             description: "must be a string and is required",
-//           },
-//           receiverId: {
-//             bsonType: "string",
-//             description: "must be a string and is required",
-//           },
-//           message: {
-//             bsonType: "string",
-//             description: "must be a string and is required",
-//           },
-//           timeStamp: {
-//             bsonType: "string",
-//             description: "must be a string and is required",
-//           },
-//         },
-//       },
-//     },
-//   })
-  
+connection.once("open", function () {
+    console.log("MongoDB database connection established successfully");
+
+    //   connection.createCollection("Messages", {
+    //     validator: {
+    //       $jsonSchema: {
+    //         bsonType: "object",
+    //         required: ["senderId", "receiverId", "message", "timeStamp"],
+    //         properties: {
+    //           senderId: {
+    //             bsonType: "string",
+    //             description: "must be a string and is required",
+    //           },
+    //           receiverId: {
+    //             bsonType: "string",
+    //             description: "must be a string and is required",
+    //           },
+    //           message: {
+    //             bsonType: "string",
+    //             description: "must be a string and is required",
+    //           },
+    //           timeStamp: {
+    //             bsonType: "string",
+    //             description: "must be a string and is required",
+    //           },
+    //         },
+    //       },
+    //     },
+    //   })
+
 });
 
 wsServer.on('connection', onConnect);
@@ -74,7 +74,7 @@ function onConnect(wsClient) {
                     receiverId: data.receiver,
                     message: data.text,
                     timeStamp: new Date().toLocaleString()
-                  })
+                })
                 // Broadcast the message to all connected clients
                 connectedClients.forEach(client => {
                     console.log("client")
@@ -116,11 +116,20 @@ app.post('/register', (req, res) => {
     res.send(registeredUsers);
 });
 
-app.get('/messages?senderId=sender&receiverId=receiver', (req, res) => {
-    console.log(req.params)
-    //const data = connection.collection("Messages").find({ senderId: req.params.senderId, receiverId: req.params.receiverId } )
+app.get('/messages', (req, res) => {
+    const data = connection.collection("Messages").find({ senderId: req.params.senderId, receiverId: req.params.receiverId }).toArray((err, data) => {
+        if (err) {
+            // Handle error
+            console.error(err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            // Send the retrieved data as a response
+            res.send(data)
+        }
+    });
     //axiosov frontic request get /messages u body tes avelacnum en erkys
-    res.send([])})
+
+})
 
 async function writeUsersToTextFile(users) {
     const usersText = JSON.stringify(users, null, 2);

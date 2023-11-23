@@ -760,3 +760,44 @@
     "name": "shavbhabsv"
   }
 }
+{
+  "success": false,
+  "message": "User not found. Check login and password.",
+  "login": ""
+}
+{
+  "success": true,
+  "user": {
+    "id": "296e8496-dcca-4ab3-a1fc-32ad4a298632",
+    "password": "asdasd",
+    "login": "asdasd",
+    "name": "Koryun"
+  }
+}
+{
+  "success": true,
+  "user": {
+    "id": "296e8496-dcca-4ab3-a1fc-32ad4a298632",
+    "password": "asdasd",
+    "login": "asdasd",
+    "name": "Koryun"
+  }
+}
+{
+  "success": true,
+  "user": {
+    "id": "296e8496-dcca-4ab3-a1fc-32ad4a298632",
+    "password": "asdasd",
+    "login": "asdasd",
+    "name": "Koryun"
+  }
+}
+{
+  "success": true,
+  "user": {
+    "id": "296e8496-dcca-4ab3-a1fc-32ad4a298632",
+    "password": "asdasd",
+    "login": "asdasd",
+    "name": "Koryun"
+  }
+}

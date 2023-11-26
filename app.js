@@ -21,37 +21,37 @@ const connectedClients = [];
 mongoose.connect(process.env.DB, { useUnifiedTopology: true, useNewUrlParser: true });
 
 const connection = mongoose.connection;
+//const a = connection.collection('test').deleteMany()
+connection.once("open", function () {
+    console.log("MongoDB database connection established successfully");
 
-connection.once("open", function() {
-  console.log("MongoDB database connection established successfully");
-  
-//   connection.createCollection("Messages", {
-//     validator: {
-//       $jsonSchema: {
-//         bsonType: "object",
-//         required: ["senderId", "receiverId", "message", "timeStamp"],
-//         properties: {
-//           senderId: {
-//             bsonType: "string",
-//             description: "must be a string and is required",
-//           },
-//           receiverId: {
-//             bsonType: "string",
-//             description: "must be a string and is required",
-//           },
-//           message: {
-//             bsonType: "string",
-//             description: "must be a string and is required",
-//           },
-//           timeStamp: {
-//             bsonType: "string",
-//             description: "must be a string and is required",
-//           },
-//         },
-//       },
-//     },
-//   })
-  
+    //   connection.createCollection("Messages", {
+    //     validator: {
+    //       $jsonSchema: {
+    //         bsonType: "object",
+    //         required: ["senderId", "receiverId", "message", "timeStamp"],
+    //         properties: {
+    //           senderId: {
+    //             bsonType: "string",
+    //             description: "must be a string and is required",
+    //           },
+    //           receiverId: {
+    //             bsonType: "string",
+    //             description: "must be a string and is required",
+    //           },
+    //           message: {
+    //             bsonType: "string",
+    //             description: "must be a string and is required",
+    //           },
+    //           timeStamp: {
+    //             bsonType: "string",
+    //             description: "must be a string and is required",
+    //           },
+    //         },
+    //       },
+    //     },
+    //   })
+
 });
 
 wsServer.on('connection', onConnect);
@@ -67,14 +67,15 @@ function onConnect(wsClient) {
 
         switch (data.type) {
             case 'message':
-                const newMessage = { sender: data.sender, text: data.text };
+                const newMessage = { sender: data.sender, text: data.text};
                 chatMessages.push(newMessage);
                 connection.collection("Messages").insertOne({
                     senderId: data.sender,
                     receiverId: data.receiver,
                     message: data.text,
                     timeStamp: new Date().toLocaleString()
-                  })
+                    
+                })
                 // Broadcast the message to all connected clients
                 connectedClients.forEach(client => {
                     console.log("client")
@@ -116,11 +117,20 @@ app.post('/register', (req, res) => {
     res.send(registeredUsers);
 });
 
-app.get('/messages?senderId=sender&receiverId=receiver', (req, res) => {
-    console.log(req.params)
-    //const data = connection.collection("Messages").find({ senderId: req.params.senderId, receiverId: req.params.receiverId } )
+app.get('/messages', (req, res) => {
+    const data = connection.collection("Messages").find({ senderId: req.params.senderId, receiverId: req.params.receiverId }).toArray((err, data) => {
+        if (err) {
+            // Handle error
+            console.error(err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            // Send the retrieved data as a response
+            res.send(data)
+        }
+    });
     //axiosov frontic request get /messages u body tes avelacnum en erkys
-    res.send([])})
+
+})
 
 async function writeUsersToTextFile(users) {
     const usersText = JSON.stringify(users, null, 2);
@@ -182,32 +192,32 @@ app.post('/messages', (req, res) => {
     const messageData = req.body;
     console.log('Received message:', messageData);
     chatMessages.push(messageData)
-    writeChatMessagesToTextFile()
+    //writeChatMessagesToTextFile()
     res.sendStatus(200);
 });
 
-function writeChatMessagesToTextFile() {
-    const messagesJSON = JSON.stringify(chatMessages, null, 2);
+// function writeChatMessagesToTextFile() {
+//     const messagesJSON = JSON.stringify(chatMessages, null, 2);
 
-    try {
-        fs.writeFile('chat.txt', messagesJSON);
-        console.log('Chat messages written to file successfully');
-    } catch (err) {
-        console.error('Error writing chat messages to file:', err.message);
-        console.error(err.stack);
-    }
-}
-async function readChatMessagesToTextFile() {
-    try {
-        const data = await fs.readFile('chat.txt', 'utf8');
-        chatMessages = JSON.parse(data);
-        console.log('Users Chat information read from file successfully');
-    } catch (err) {
-        console.error('Error reading file:', err);
-    }
-}
+//     try {
+//         fs.writeFile('chat.txt', messagesJSON);
+//         console.log('Chat messages written to file successfully');
+//     } catch (err) {
+//         console.error('Error writing chat messages to file:', err.message);
+//         console.error(err.stack);
+//     }
+// }
+// async function readChatMessagesToTextFile() {
+//     try {
+//         const data = await fs.readFile('chat.txt', 'utf8');
+//         chatMessages = JSON.parse(data);
+//         console.log('Users Chat information read from file successfully');
+//     } catch (err) {
+//         console.error('Error reading file:', err);
+//     }
+// }
 
-readChatMessagesToTextFile()
+// readChatMessagesToTextFile()
 
 // app.get('/messages', async(req, res) =>{
 //     try{

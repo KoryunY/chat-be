@@ -118,7 +118,9 @@ app.post('/register', (req, res) => {
 });
 
 app.get('/messages', (req, res) => {
-    const data = connection.collection("Messages").find({ senderId: req.params.senderId, receiverId: req.params.receiverId }).toArray((err, data) => {
+    const { senderId, receiverId } = req.query;
+    connection.collection("Messages").find({ senderId, receiverId }).toArray((err, data) => {
+        
         if (err) {
             // Handle error
             console.error(err);
